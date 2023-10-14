@@ -7,15 +7,73 @@ document.querySelector('#dark-mode-toggle').addEventListener('click', () => {
 
 });
 
+const start_screen = document.querySelector('#start-screen');
+const game_screen=document.querySelector('#game-screen');
+const pause_screen= document.querySelector('#pause-screen')
+
+const cells = document.querySelectorAll('.main-grid-cell');
 
 
 const name_input = document.querySelector('#input-name');
-const start_screen = document.querySelector('#start-screen');
+
+
+const player_name=document.querySelector('#player-name');
+const game_level=document.querySelector('#game-level');
+const game_time= document.querySelector('#game-time');
 
 let level_index = 0;
 let level = CONSTANT.LEVEL[level_index];
 
+let timer = null;
 
+let pause=false;
+let seconds =0;
+
+
+
+
+
+const getGameInfo = () => JSON.parse(localStorage.getItem('game'));
+
+const initGameGrid = () => {
+    let index = 0;
+
+    for(let i = 0 ; i<Math.pow(CONSTANT.GRID_SIZE,2);i++){
+        let row=Math.floor(i/CONSTANT.GRID_SIZE);
+        let col = i%CONSTANT.GRID_SIZE;
+        if (row==2 || row ==5) cells[index].style.marginBottom = '10px ';
+        if(col==2 || col==5) cells[index].style.marginRight='10px';
+
+        index++;
+    }
+}
+
+const setPlayerName = (name) =>localStorage.setItem('player_name',name);
+const getPlayerName=()=> localStorage.getItem('player_name');
+
+const showTime=(seconds)=>new Date(seconds*1000).toISOString().substr(11,8);
+
+const startGame=()=>{
+    start_screen.classList.remove('active');
+    game_screen.classList.add('active');
+
+    player_name.innerHTML =name_input.value.trim();
+    setPlayerName(name_input.value.trim());
+
+    game_level.innerHTML=CONSTANT.LEVEL_NAME[level_index];
+    seconds = 0;
+
+    timer= setInterval(() => {
+        if(!pause){
+            seconds = seconds +1;
+            game_time.innerHTML=showTime(seconds);
+        }
+        
+    }, 1000);
+
+
+
+}
 
 
 document.querySelector('#btn-level').addEventListener('click', (e) => {
@@ -27,7 +85,7 @@ document.querySelector('#btn-level').addEventListener('click', (e) => {
 
 document.querySelector('#btn-play').addEventListener('click', () => {
     if (name_input.value.trim().length > 0) {
-        alert(`level => ${level}`);
+        startGame();
 
     } else {
         name_input.classList.add('input-err');
@@ -39,8 +97,14 @@ document.querySelector('#btn-play').addEventListener('click', () => {
     }
 });
 
-const getGameInfo = () => JSON.parse(localStorage.getItem('game'));
-
+document.querySelector('#btn-pause').addEventListener('click',()=>{
+    pause_screen.classList.add('active');
+    pause=true;
+})
+document.querySelector('#btn-resume').addEventListener('click',()=>{
+    pause_screen.classList.remove('active');
+    pause=false;
+})
 const init = () => {
     const darkmode = JSON.parse(localStorage.getItem('darkmode'));
     document.body.classList.add(darkmode ? 'dark' : 'light');
@@ -49,6 +113,15 @@ const init = () => {
     const game = getGameInfo();
 
     document.querySelector('#btn-continue').style.display = game ? 'grid' : 'none';
+    
+    initGameGrid();
+    
+    if(getPlayerName()){
+        name_input.value=getPlayerName();
+    }
+    else{
+        name_input.focus();
+    }
 }
 
 init();

@@ -53,6 +53,10 @@ const getPlayerName=()=> localStorage.getItem('player_name');
 
 const showTime=(seconds)=>new Date(seconds*1000).toISOString().substr(11,8);
 
+const initSudoku = () => {
+    // burada sudoku puzzle oluşturalım 
+}
+
 const startGame=()=>{
     start_screen.classList.remove('active');
     game_screen.classList.add('active');
@@ -70,10 +74,17 @@ const startGame=()=>{
         }
         
     }, 1000);
-
-
-
 }
+
+const returnStartScreen = () => {
+    clearInterval(timer);
+    pause=false,
+    seconds=0;
+    start_screen.classList.add('active');
+    game_screen.classList.remove('active');
+    pause_screen.classList.remove('active');
+}
+
 
 
 document.querySelector('#btn-level').addEventListener('click', (e) => {
@@ -105,6 +116,13 @@ document.querySelector('#btn-resume').addEventListener('click',()=>{
     pause_screen.classList.remove('active');
     pause=false;
 })
+
+document.querySelector('#btn-new-game').addEventListener('click',()=>{
+    returnStartScreen();
+})
+
+
+
 const init = () => {
     const darkmode = JSON.parse(localStorage.getItem('darkmode'));
     document.body.classList.add(darkmode ? 'dark' : 'light');

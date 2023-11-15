@@ -201,6 +201,21 @@ nav {
 
 }
 
+@keyframes bounce{
+    0%{
+        transform: translateX(0);
+    }
+    25%{
+        transform: translateX(20px);
+    }
+    50%{
+        transform: translateX(-20px);
+    }
+    100%{
+        transform: translateX(0);
+    }
+}
+
 .main-game{
     display: flex;
     height: 100%;
@@ -227,10 +242,11 @@ nav {
     border-radius: var(--border-radius);
     background-color: var(--bg-main);
     color: blue;
-    display: flex;
+    display: grid;
     place-items: center;
     font-size: var(--font-size);
     cursor: pointer;
+    justify-content: center;
 }
 
 .main-grid-cell.filled{
@@ -351,7 +367,7 @@ nav {
     margin-top: 20px;
 }
 
-.result-screen.active .btn {
+.result-screen.active div {
     animation: zoom-in .5s cubic-bezier(0.175,0.885,0.32,1.275);
 }
 
@@ -389,20 +405,7 @@ nav {
 
 
 
-@keyframes bounce{
-    0%{
-        transform: translateX(0);
-    }
-    25%{
-        transform: translateX(20px);
-    }
-    50%{
-        transform: translateX(-20px);
-    }
-    100%{
-        transform: translateX(0);
-    }
-}
+
 
 .cell-err {
     animation: zoom-out-shake .5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
